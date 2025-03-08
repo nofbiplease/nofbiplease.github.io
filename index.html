@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Chat Room</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: "Courier New", monospace;
+            text-align: center;
+        }
+        #chat-box {
+            width: 80%;
+            height: 300px;
+            border: 1px solid lime;
+            overflow-y: scroll;
+            margin: auto;
+            padding: 10px;
+            text-align: left;
+            background-color: black;
+        }
+        input, button {
+            background-color: black;
+            color: lime;
+            border: 1px solid lime;
+            padding: 5px;
+            font-family: "Courier New", monospace;
+        }
+        button:hover {
+            background-color: lime;
+            color: black;
+        }
+        #username-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>💻 Terminal Chat Room</h2>
+
+    <div id="username-section">
+        <input type="text" id="username" placeholder="Enter username">
+        <button onclick="setUsername()">Set Username</button>
+    </div>
+
+    <div id="chat-box"></div>
+
+    <input type="text" id="message" placeholder="Type a message" onkeydown="handleKeyPress(event)">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        let username = "";
+
+        function setUsername() {
+            const input = document.getElementById("username").value.trim();
+            if (input) {
+                username = input;
+                document.getElementById("username-section").style.display = "none";
+                document.getElementById("message").focus();
+                logMessage("System", `Welcome, ${username}! Type your message below.`);
+            }
+        }
+
+        function logMessage(user, message) {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<p><strong>${user}:</strong> ${message}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendMessage() {
+            if (!username) {
+                alert("Please set your username first!");
+                return;
+            }
+
+            let message = document.getElementById("message").value.trim();
+            if (message) {
+                logMessage(username, message);
+                document.getElementById("message").value = "";
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
