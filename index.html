@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Checker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        body {
+            background-color: black;
+            color: #00FF00;
+            font-family: 'Share Tech Mono', monospace;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        input, button {
+            background-color: black;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            font-size: 1.2em;
+            padding: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        input:focus, button:hover {
+            background-color: #002200;
+            box-shadow: 0 0 10px #00FF00;
+        }
+        
+        pre {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #00FF00;
+            padding: 10px;
+            white-space: pre-wrap;
+            box-shadow: 0 0 10px #00FF00;
+            animation: glow 1.5s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00FF00; }
+            to { text-shadow: 0 0 15px #00FF00; }
+        }
+        
+        h1, h2, p {
+            text-shadow: 0 0 10px #00FF00;
+            animation: glow 1.5s infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <h1>RockYou Password Checker</h1>
+    <p>Enter a password to check if it exists in the RockYou list:</p>
+    <input type="text" id="passwordInput" placeholder="Enter password">
+    <button onclick="checkPassword()">Check</button>
+    <p id="result"></p>
+    <h2>RockYou Password List</h2>
+    <pre id="passwordList">Loading...</pre>
+
+    <script>
+        let rockyouPasswords = new Set();
+
+        fetch('rockyou.txt')
+            .then(response => response.text())
+            .then(text => {
+                rockyouPasswords = new Set(text.split('\n'));
+                document.getElementById('passwordList').textContent = text.substring(0, 500) + "...\n(Truncated)";
+            })
+            .catch(error => {
+                document.getElementById('passwordList').textContent = "Error loading rockyou.txt";
+            });
+
+        function checkPassword() {
+            const inputPassword = document.getElementById('passwordInput').value;
+            const resultElement = document.getElementById('result');
+
+            if (rockyouPasswords.has(inputPassword)) {
+                resultElement.textContent = "⚠️ Password found in RockYou list! Change it immediately!";
+                resultElement.style.color = "red";
+            } else {
+                resultElement.textContent = "✅ Password not found in RockYou list. It's safer!";
+                resultElement.style.color = "#00FF00";
+            }
+        }
+    </script>
+</body>
+</html>
